@@ -11,22 +11,22 @@ export class User {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
-  @Column({ nullable: true })
+  @Column()
   username: string;
 
-  @Column({ nullable: true })
+  @Column()
   email: string;
 
-  @Column({ nullable: true })
+  @Column()
   hash: string;
 
-  @Column({ nullable: true })
+  @Column()
   salt: string;
 
   @Column({ type: 'timestamp', nullable: true })
   last_logged: Date;
 
-  @Column({ nullable: true })
+  @Column({ default: 'user' })
   role: string;
 
   @CreateDateColumn({ type: 'timestamp' })
