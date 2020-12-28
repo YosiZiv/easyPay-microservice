@@ -2,7 +2,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 export const config: TypeOrmModuleOptions = {
   type: 'postgres',
-  host: 'localhost',
+  host: 'postgres://auth-postgres-srv',
   port: 5432,
   username: 'postgres',
   password: 'postgres',
