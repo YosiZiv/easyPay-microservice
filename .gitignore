@@ -1,3 +1,3 @@
 node_modules
 infra/k8s/auth-postgres-configmap.yaml
-src/orm.config.ts
+orm.config.ts
