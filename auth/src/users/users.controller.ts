@@ -1,12 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
+import { userLoginDto } from './dtos/user-login-dto';
+import { UserRegisterDto } from './dtos/user-register.dto';
 import { UsersService } from './users.service';
 
 @Controller()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('users/createMany')
-  createMany() {
+  @Post('users/createMany')
+  async createMany() {
     const testUsers = [
       {
         username: 'test',
@@ -19,7 +21,14 @@ export class UsersController {
         password: '123456',
       },
     ];
-    this.usersService.findOne('1');
-    return 'test';
+    return await this.usersService.createMany(testUsers);
+  }
+  @Post('users/login')
+  async login(userLoginDto: userLoginDto) {
+    return await this.usersService.findOne(userLoginDto);
+  }
+  @Post('users/register')
+  async register(userRegisterDto: UserRegisterDto) {
+    return await this.usersService.create(userRegisterDto);
   }
 }

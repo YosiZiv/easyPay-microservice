@@ -18,10 +18,7 @@ export class User {
   email: string;
 
   @Column()
-  hash: string;
-
-  @Column()
-  salt: string;
+  password: string;
 
   @Column({ type: 'timestamp', nullable: true })
   last_logged: Date;
