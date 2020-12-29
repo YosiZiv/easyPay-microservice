@@ -35,9 +35,9 @@ metadata:
   name: auth-postgres-srv
 spec:
   selector:
-    app: auth-postgres-srv
+    app: auth-postgres
   ports:
-    - name: auth-postgres-srv
+    - name: auth-postgres-db
       protocol: TCP
       port: 5432
       targetPort: 5432

@@ -6,7 +6,10 @@ import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
 import { config } from './orm.config';
 @Module({
-  imports: [TypeOrmModule.forRoot(config)],
+  imports: [
+    TypeOrmModule.forRoot({ ...config, entities: [User] }),
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
