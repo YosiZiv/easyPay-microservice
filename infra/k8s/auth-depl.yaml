@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: easy-pay-auth-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: easy-pay-auth
   template:
     metadata:
       labels:
-        app: auth
+        app: easy-pay-auth
     spec: 
       containers:
         - name: auth
-          image: katlany/auth
+          image: katlany/easy-pay-auth
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: easy-pay-auth-srv
 spec:
   selector:
-    app: auth
+    app: easy-pay-auth
   ports:
     - name: auth
       protocol: TCP
