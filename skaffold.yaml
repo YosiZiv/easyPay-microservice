@@ -8,7 +8,7 @@ build:
   local:  
     push: false
   artifacts:
-    - image: katlany/auth
+    - image: katlany/easy-pay-auth
       context: auth
       docker:
         dockerfile: Dockerfile
