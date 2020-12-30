@@ -4,11 +4,12 @@ import {
   EventSubscriber,
   InsertEvent,
 } from 'typeorm';
-import { User } from './user.entity';
+import { User } from '../users/user.entity';
 import * as bcrypt from 'bcrypt';
+import { Next } from '@nestjs/common';
 
 @EventSubscriber()
-export class UserSubscriber implements EntitySubscriberInterface<User> {
+export class AuthSubscriber implements EntitySubscriberInterface<User> {
   constructor(connection: Connection) {
     connection.subscribers.push(this);
   }
@@ -21,7 +22,7 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
     try {
       const hashed = await bcrypt.hash(event.entity.password, 10);
       event.entity.password = hashed;
-      return;
+      Next();
     } catch (err) {
       console.log('error hashed', err);
     }
