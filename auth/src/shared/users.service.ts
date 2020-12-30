@@ -1,8 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Body, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Connection, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { userLoginDto } from '../users/dtos/user-login-dto';
+import { UserLoginDto } from '../users/dtos/user-login-dto';
 import { UserRegisterDto } from '../users/dtos/user-register.dto';
 import { User } from '../users/user.entity';
 
@@ -14,13 +14,13 @@ export class UsersService {
     private connection: Connection,
   ) {}
 
-  async createMany(users) {
+  async createMany(@Body() users) {
     await this.connection.transaction(async (manager) => {
       await manager.save(users[0]);
       await manager.save(users[1]);
     });
   }
-  async create(userRegisterDto: UserRegisterDto) {
+  async create(@Body() userRegisterDto: UserRegisterDto) {
     try {
       const { email } = userRegisterDto;
       const user = await this.usersRepository.findOne({ email });
@@ -32,7 +32,7 @@ export class UsersService {
       console.log(err);
     }
   }
-  async findOne(userLoginDto: userLoginDto): Promise<User> {
+  async findOne(@Body() userLoginDto: UserLoginDto): Promise<User> {
     const { email, password } = userLoginDto;
     const user = await this.usersRepository.findOne({ email });
     if (!user) {
@@ -44,7 +44,7 @@ export class UsersService {
     }
     return user;
   }
-  async remove(id: string): Promise<void> {
+  async remove(@Body() id: string): Promise<void> {
     await this.usersRepository.delete(id);
   }
 }
