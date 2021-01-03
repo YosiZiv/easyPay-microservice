@@ -12,7 +12,7 @@ export class User {
   id: number;
 
   @Column()
-  username: string;
+  userName: string;
 
   @Column()
   email: string;
@@ -22,7 +22,7 @@ export class User {
   password: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  last_logged: Date;
+  lastLogged: Date;
 
   @Column({ default: 'user' })
   role: string;

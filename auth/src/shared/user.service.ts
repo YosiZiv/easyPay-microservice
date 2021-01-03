@@ -7,10 +7,10 @@ import { UserRegisterDto } from '../users/dtos/user-register.dto';
 import { User } from '../users/user.entity';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
     private connection: Connection,
   ) {}
 
@@ -23,18 +23,18 @@ export class UsersService {
   async create(@Body() userRegisterDto: UserRegisterDto) {
     try {
       const { email } = userRegisterDto;
-      const user = await this.usersRepository.findOne({ email });
+      const user = await this.userRepository.findOne({ email });
       if (user) {
         throw new HttpException('user all ready exist', HttpStatus.BAD_REQUEST);
       }
-      return this.usersRepository.save(userRegisterDto);
+      return this.userRepository.save(userRegisterDto);
     } catch (err) {
       console.log(err);
     }
   }
   async findOne(@Body() userLoginDto: UserLoginDto): Promise<User> {
     const { email, password } = userLoginDto;
-    const user = await this.usersRepository.findOne({ email });
+    const user = await this.userRepository.findOne({ email });
     if (!user) {
       // TODO costume error massage class
       throw new HttpException('invalid credentials', HttpStatus.UNAUTHORIZED);
@@ -45,6 +45,10 @@ export class UsersService {
     return user;
   }
   async remove(@Body() id: string): Promise<void> {
-    await this.usersRepository.delete(id);
+    await this.userRepository.delete(id);
+  }
+  async findByPayload(payload: any) {
+    const { userName } = payload;
+    return await this.userRepository.findOne({ userName });
   }
 }
