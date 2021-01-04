@@ -16,7 +16,7 @@ export class UserEntity {
   id: number;
 
   @Column()
-  userName: string;
+  user_name: string;
 
   @Column()
   @IsEmail()
@@ -27,19 +27,19 @@ export class UserEntity {
   password: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  lastLogged: Date;
+  last_logged: Date;
 
   @Column({ default: 'user' })
   role: string;
 
   @CreateDateColumn({ type: 'timestamp' })
-  createdAt: Date;
+  created_at: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
+  updated_at: Date;
 
   @Column({ type: 'timestamp', nullable: true })
-  deletedAt: Date;
+  deleted_at: Date;
 
   @BeforeInsert()
   async hashPassword() {

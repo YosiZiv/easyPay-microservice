@@ -36,16 +36,16 @@ export class UserService {
 
   async create(dto: CreateUserDto): Promise<UserRO> {
     // check uniqueness of username/email
-    const { userName, email, password } = dto;
+    const { user_name, email, password } = dto;
     const qb = await getRepository(UserEntity)
       .createQueryBuilder('user')
-      .where('user.username = :username', { userName })
+      .where('user.user_name = :user_name', { user_name })
       .orWhere('user.email = :email', { email });
 
     const user = await qb.getOne();
 
     if (user) {
-      const errors = { username: 'Username and email must be unique.' };
+      const errors = { username: 'user_name and email must be unique.' };
       throw new HttpException(
         { message: 'Input data validation failed', errors },
         HttpStatus.BAD_REQUEST,
@@ -54,9 +54,12 @@ export class UserService {
 
     // create new user
     let newUser = new UserEntity();
-    newUser.userName = userName;
+    newUser.user_name = user_name;
     newUser.email = email;
     newUser.password = password;
+    newUser.created_at = new Date();
+    console.log(newUser);
+
     const errors = await validate(newUser);
     if (errors.length > 0) {
       const _errors = { username: 'Userinput is not valid.' };
@@ -105,7 +108,7 @@ export class UserService {
     return jwt.sign(
       {
         id: user.id,
-        username: user.username,
+        user_name: user.user_name,
         email: user.email,
         exp: exp.getTime() / 1000,
       },
@@ -116,7 +119,7 @@ export class UserService {
   private buildUserRO(user: UserEntity) {
     const userRO = {
       id: user.id,
-      userName: user.userName,
+      user_name: user.user_name,
       email: user.email,
       token: this.generateJWT(user),
     };
