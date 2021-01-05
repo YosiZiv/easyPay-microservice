@@ -1,20 +1,25 @@
 import {
   Entity,
-  Column,
   PrimaryGeneratedColumn,
-  CreateDateColumn,
+  Column,
+  BeforeInsert,
   UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
+import { IsEmail } from 'class-validator';
+import * as argon2 from 'argon2';
 import { Exclude } from 'class-transformer';
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn({ type: 'bigint' })
+
+@Entity('user')
+export class UserEntity {
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  username: string;
+  user_name: string;
 
   @Column()
+  @IsEmail()
   email: string;
 
   @Column()
@@ -35,4 +40,9 @@ export class User {
 
   @Column({ type: 'timestamp', nullable: true })
   deleted_at: Date;
+
+  @BeforeInsert()
+  async hashPassword() {
+    this.password = await argon2.hash(this.password);
+  }
 }
