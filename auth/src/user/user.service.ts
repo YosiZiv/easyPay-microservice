@@ -39,11 +39,9 @@ export class UserService {
     const { user_name, email, password } = dto;
     const qb = await getRepository(UserEntity)
       .createQueryBuilder('user')
-      .where('user.user_name = :user_name', { user_name })
-      .orWhere('user.email = :email', { email });
-
+      .where('user_name = :user_name', { user_name })
+      .orWhere('email = :email', { email });
     const user = await qb.getOne();
-
     if (user) {
       const errors = { username: 'user_name and email must be unique.' };
       throw new HttpException(
@@ -58,8 +56,6 @@ export class UserService {
     newUser.email = email;
     newUser.password = password;
     newUser.created_at = new Date();
-    console.log(newUser);
-
     const errors = await validate(newUser);
     if (errors.length > 0) {
       const _errors = { username: 'Userinput is not valid.' };
@@ -97,6 +93,9 @@ export class UserService {
 
   async findByEmail(email: string): Promise<UserRO> {
     const user = await this.userRepository.findOne({ email: email });
+    if (!user) {
+      throw new HttpException({ User: 'not found' }, HttpStatus.BAD_REQUEST);
+    }
     return this.buildUserRO(user);
   }
 
