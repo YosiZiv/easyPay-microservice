@@ -9,7 +9,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserRO } from './user.interface';
+import { UserData } from './user.interface';
 import { CreateUserDto, UpdateUserDto, LoginUserDto } from './dto';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { User } from './user.decorator';
@@ -19,7 +19,7 @@ import { ValidationPipe } from '../shared/pipes/validation.pipe';
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get('user')
-  async findMe(@User('email') email: string): Promise<UserRO> {
+  async findMe(@User('email') email: string): Promise<UserData> {
     return await this.userService.findByEmail(email);
   }
 
@@ -33,7 +33,8 @@ export class UserController {
 
   @UsePipes(new ValidationPipe())
   @Post('users')
-  async create(@Body('user') userData: CreateUserDto) {
+  async create(@Body() userData: CreateUserDto) {
+    console.log(userData);
     return this.userService.create(userData);
   }
 
@@ -44,15 +45,17 @@ export class UserController {
 
   @UsePipes(new ValidationPipe())
   @Post('users/login')
-  async login(@Body('user') loginUserDto: LoginUserDto): Promise<UserRO> {
+  async login(@Body('user') loginUserDto: LoginUserDto): Promise<UserData> {
     const _user = await this.userService.findOne(loginUserDto);
 
     const errors = { User: ' not found' };
     if (!_user) throw new HttpException({ errors }, 401);
-
     const token = await this.userService.generateJWT(_user);
     const { email, user_name } = _user;
-    const user = { email, token, user_name };
-    return { user };
+    return { email, token, user_name };
+  }
+  @Get()
+  test(): string {
+    return 'hello world';
   }
 }

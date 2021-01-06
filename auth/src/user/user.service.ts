@@ -7,7 +7,7 @@ import { validate } from 'class-validator';
 import { HttpException } from '@nestjs/common/exceptions/http.exception';
 import { HttpStatus } from '@nestjs/common';
 import * as argon2 from 'argon2';
-import { UserRO } from './user.interface';
+import { UserData } from './user.interface';
 const jwt = require('jsonwebtoken');
 
 @Injectable()
@@ -34,7 +34,7 @@ export class UserService {
     return null;
   }
 
-  async create(dto: CreateUserDto): Promise<UserRO> {
+  async create(dto: CreateUserDto): Promise<UserData> {
     // check uniqueness of username/email
     const { user_name, email, password } = dto;
     const qb = await getRepository(UserEntity)
@@ -80,7 +80,7 @@ export class UserService {
     return await this.userRepository.delete({ email: email });
   }
 
-  async findById(id: number): Promise<UserRO> {
+  async findById(id: number): Promise<UserData> {
     const user = await this.userRepository.findOne(id);
 
     if (!user) {
@@ -91,7 +91,7 @@ export class UserService {
     return this.buildUserRO(user);
   }
 
-  async findByEmail(email: string): Promise<UserRO> {
+  async findByEmail(email: string): Promise<UserData> {
     const user = await this.userRepository.findOne({ email: email });
     if (!user) {
       throw new HttpException({ User: 'not found' }, HttpStatus.BAD_REQUEST);
@@ -123,6 +123,6 @@ export class UserService {
       token: this.generateJWT(user),
     };
 
-    return { user: userRO };
+    return userRO;
   }
 }
